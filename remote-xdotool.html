@@ -1,0 +1,62 @@
+<html><head><style>body {
+   color: black;
+   font-family: sans;
+}
+</style></head><body><h1 id="remote-xdotool">Remote XDoTool</h1>
+<p>Ever wanted something overcomplicated to control your computer remotely? Remote XDoTool is here to help! It is basically an easy way to create an API, for XDoTool, with Python and Flask.</p>
+<h3 id="requirements">Requirements</h3>
+<ul>
+<li>Python 3.5 or more</li>
+<li>Flask</li>
+<li>Suprocess</li>
+</ul>
+<h3 id="use-the-complete-flaskapp">Use the complete Flaskapp</h3>
+<p>To use the complete Flaskapp, simply type</p>
+<pre><code> <span class="hljs-keyword">python3</span> full.<span class="hljs-keyword">py</span>
+</code></pre><p>in a terminal.</p>
+<p>Then, try cURLing <a href="http://computer.ip.adress.123:5000/key_ID">http://computer.ip.adress.123:5000/key_ID</a>, where computer.ip.adress.123 is the IP adress of the host and key_ID is the xdotool key ID. Here you go!</p>
+<h3 id="some-examples-of-config">Some examples of config</h3>
+<p>In the repo, the presentation.py file is an example of how you might use this to remotely control a presentation (here it was created by me to control a lesson i gave with a pi and a Stream Deck)</p>
+<h3 id="make-your-own-config">Make your own config</h3>
+<h4 id="first-method-create-your-own-flask-app">First method: Create your own Flask app</h4>
+<p>To make your own config, take a blank python file and copy-paste the following inside:</p>
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> flask <span class="hljs-keyword">import</span> Flask, jsonify
+<span class="hljs-keyword">import</span> subprocess
+
+app = Flask(__name__)
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">run_xdotool</span><span class="hljs-params">(command)</span>:</span>
+    <span class="hljs-keyword">try</span>:
+        subprocess.run(f<span class="hljs-string">"xdotool {command}"</span>, shell=<span class="hljs-keyword">True</span>, check=<span class="hljs-keyword">True</span>)
+    <span class="hljs-keyword">except</span> subprocess.CalledProcessError <span class="hljs-keyword">as</span> e:
+        <span class="hljs-keyword">return</span> {<span class="hljs-string">"error"</span>: f<span class="hljs-string">"Failed to execute command: {e}"</span>}
+    <span class="hljs-keyword">return</span> {<span class="hljs-string">"message"</span>: <span class="hljs-string">"Command executed successfully"</span>}
+</code></pre>
+<p>Then, you can add Keypoints (keypress API endpoints), following this template:</p>
+<pre><code class="lang-python">@app.route(<span class="hljs-string">'/your_route'</span>, methods=[<span class="hljs-string">'GET'</span>])
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">your_route</span><span class="hljs-params">()</span></span>:
+    <span class="hljs-comment"># Maybe a short description?</span>
+    <span class="hljs-keyword">return</span> run_xdotool(<span class="hljs-string">"key Key_ID"</span>)
+</code></pre>
+<p>where &#39;your_route&#39; is the endpoint you wish to call to press the &#39;Key_ID&#39; key. If you want to, replace Maybe a short description? with a short one-line description.</p>
+<p>At the very end of the file, add these lines of code:</p>
+<pre><code class="lang-python"><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:
+    app.<span class="hljs-built_in">run</span>(host=<span class="hljs-string">'0.0.0.0'</span>, port=<span class="hljs-number">5000</span>, debug=<span class="hljs-literal">True</span>)
+</code></pre>
+<h5 id="run-your-flask-app-and-use-it">Run your Flask App and use it</h5>
+<p>To run the program, simply type</p>
+<pre><code><span class="hljs-keyword">python3</span> <span class="hljs-keyword">file</span>.<span class="hljs-keyword">py</span>
+</code></pre><p>in a terminal, where file.py is your config file.</p>
+<p>Then, try cURLing <a href="http://computer.ip.adress.123:5000/your_route">http://computer.ip.adress.123:5000/your_route</a>, where computer.ip.adress.123 is the IP adress of the host and your_route is the keypoint. Here you go!</p>
+<h4 id="second-method-use-the-auto-generating-flask-app">Second method: use the auto-generating Flask app</h4>
+<p>This is a bit simpler, because you will only have to fill a list. In the agfinal.py file, locate this line:</p>
+<pre><code class="lang-python">keys = [<span class="hljs-built_in">Key</span>(<span class="hljs-string">"Up"</span>), <span class="hljs-built_in">Key</span>(<span class="hljs-string">"Down"</span>)]
+</code></pre>
+<p>If you want to add anything, add a comma at &#39;Key(&quot;Down&quot;)&#39; to indicate Python to add something.
+To add a Keypoint (keypress API endpoints), simply add &#39;Key(&quot;key_id&quot;),&#39; where key_id is the Key ID for standard xdotool. For a final element, do not forget to remove the comma. </p>
+<h5 id="run-the-auto-generating-flask-app-and-use-it">Run the Auto-generating Flask app and use it</h5>
+<p>To run the auto-generating Flask app, simply type</p>
+<pre><code><span class="hljs-keyword">python3</span> agfinal.<span class="hljs-keyword">py</span>
+</code></pre><p>in a terminal.</p>
+<p>Then, try cURLing <a href="http://computer.ip.adress.123:5000/key_ID">http://computer.ip.adress.123:5000/key_ID</a>, where computer.ip.adress.123 is the IP adress of the host and key_ID is the xdotool key ID. Here you go!</p>
+</body></html>
